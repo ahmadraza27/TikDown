@@ -59,7 +59,7 @@ export class History extends Component<{ add: { add: string, docsList: string },
             <ScrollView className=''>
                 {this.props?.add?.docsList["_j"].map((i: string, index: number) => {
                     return (
-                        <>
+                        
 
 
 
@@ -105,7 +105,7 @@ export class History extends Component<{ add: { add: string, docsList: string },
                                 </TouchableOpacity>
                             </View>
 
-                        </>
+                        
                     )
                 })
 
