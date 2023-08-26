@@ -21,6 +21,7 @@
     "android": {
       "package": "com.inbound.TikDownApp",
       "googleServicesFile":"./google-services.json",
+
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/p4.jpg",
         "backgroundColor": "#ffffff"

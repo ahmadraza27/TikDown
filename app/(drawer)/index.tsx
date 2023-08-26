@@ -25,8 +25,6 @@ import { ADD_TRUE,ADD } from '../../assets/redux/actions/addReducer';
 import { connect } from "react-redux";
 // import masked View
 import MaskedView from '@react-native-masked-view/masked-view';
-// import image 
-const image = require('../../assets/images/p5.jpg')
 // get permissions 
 // import * as Permissions from 'expo-permissions';
 // import RNFetchBlob from 'rn-fetch-blob';
@@ -99,7 +97,7 @@ class index extends React.Component<{ ADD_TRUE: any, ADD: any, ADD_FALSE: any },
     // download the video from the server
     downloadVideo = async (data: string, title: string) => {
         title = title.replace(/([\uE000-\uF8FF]|\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDDFF])/g, '').replace(/\s+/g, ' ').trim().replace(/#/g, '')
-        // console.log("going")
+        console.log("going")
         const filename = `${title}.mp4`;
         // console.log("file name :" + filename)
         // console.log("title :" + title)
@@ -109,7 +107,7 @@ class index extends React.Component<{ ADD_TRUE: any, ADD: any, ADD_FALSE: any },
             this.tikDir + filename
         );
         // console.log(result);
-        // console.log("saving...");
+        console.log("saving...");
         this.save(result.uri, filename, result.headers["Content-Type"]);
         // this.save1(result.uri, filename, result.headers["Content-Type"],data);
     }
@@ -187,7 +185,7 @@ class index extends React.Component<{ ADD_TRUE: any, ADD: any, ADD_FALSE: any },
                 await FileSystem.StorageAccessFramework.createFileAsync(permissions.directoryUri, filename, mimetype)
                     .then(async (uri) => {
                         await FileSystem.writeAsStringAsync(uri, base64, { encoding: FileSystem.EncodingType.Base64 });
-                        // console.log("saved")
+                        console.log("saved")
                     })
                     .catch(e => console.log(e));
             } else {
@@ -202,11 +200,11 @@ class index extends React.Component<{ ADD_TRUE: any, ADD: any, ADD_FALSE: any },
     };
     // get video data such as download link from module
     getVideoData = async (url: string) => {
-        // console.log("getting data")
+        console.log("getting data")
         if (url.length > 0) {
             v1(url).then((data: videoInfo) => {
                 // console.log('hi ok done', data['video']['noWatermark'])
-                // console.log(data['title'])
+                console.log(data['title'])
                 // console.log(FileSystem.documentDirectory)
                 this.downloadVideo(data['video']['noWatermark'], data['title'])
             });
