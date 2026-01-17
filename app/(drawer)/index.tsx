@@ -3,6 +3,8 @@ import { StatusBar, View, Text, Button, TextInput, Platform, TouchableOpacity, A
 import { Drawer } from 'expo-router/drawer'
 // importing hooks
 import React, { useState } from 'react'
+
+  // "node-tiklydown": "^1.0.0",
 // module for getting tiktok data
 const { v1 } = require("node-tiklydown");
 
