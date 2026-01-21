@@ -1,84 +1,103 @@
-import { View, Text,Platform,Alert } from 'react-native'
-// import connect 
-import { connect } from 'react-redux'
-import { ADD_TRUE } from '../../assets/redux/actions/addReducer'
+import React, { useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { connect } from "react-redux";
+import { Drawer } from "expo-router/drawer";
+import { Stack } from "expo-router";
+import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import MaskedView from "@react-native-masked-view/masked-view";
+import * as NavigationBar from "expo-navigation-bar";
 
-// import icon
-import { MaterialIcons } from '@expo/vector-icons';
-import React,{useRef,useState,useEffect} from 'react'
-import { Stack } from 'expo-router'
-import { Drawer } from 'expo-router/drawer'
+// Redux action
+import { ADD_TRUE } from "../../assets/redux/actions/addReducer";
 
-// import gradient
-import { LinearGradient } from 'expo-linear-gradient';
-import MaskedView from '@react-native-masked-view/masked-view';
-// import bottom navigation
-import * as NavigationBar from 'expo-navigation-bar';
+const Layout = ({ ADD_TRUE }: { ADD_TRUE: () => void }) => {
+  useEffect(() => {
+    NavigationBar.setBackgroundColorAsync("black");
+  }, []);
 
+  return (
+    <>
+      <Stack.Screen options={{ headerShown: false }} />
 
-const _layout = ({ ADD_TRUE }: { ADD_TRUE: any }) => {
+      <Drawer
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: "black",
+          },
+          headerShadowVisible: false,
+          drawerStyle: {
+            backgroundColor: "#020617",
+          },
+        }}
+      >
+        <Drawer.Screen
+          name="index"
+          options={{
+            swipeEnabled: false,
+            headerTitleAlign: "center",
 
-	(async function () {
-		// console.log("history")
-		const color = await NavigationBar.getBackgroundColorAsync();
-		NavigationBar.setBackgroundColorAsync("black")
-		// console.log(color, "of history")
+            headerTitle: () => (
+              <MaskedView
+                maskElement={
+                  <Text style={styles.titleText}>TikDown</Text>
+                }
+              >
+                <LinearGradient
+                  colors={["#EE1D52", "#FFFFFF", "#69C9D0"]}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                >
+                  <Text style={[styles.titleText, styles.hidden]}>
+                    TikDown
+                  </Text>
+                </LinearGradient>
+              </MaskedView>
+            ),
 
-	})()
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={ADD_TRUE}
+                style={styles.iconBtn}
+                activeOpacity={0.7}
+              >
+                <MaterialIcons
+                  name="history"
+                  size={24}
+                  color="#69C9D0"
+                />
+              </TouchableOpacity>
+            ),
 
+            headerBackground: () => (
+              <View style={styles.headerBg} />
+            ),
+          }}
+        />
+      </Drawer>
+    </>
+  );
+};
 
-    return (
-        <>
-            <Stack.Screen options={{
+export default connect(null, { ADD_TRUE })(Layout);
 
-            }} />
-            <Drawer >
-                <Drawer.Screen name='index' options={{
-                    headerTitle: (props) => (
-                        <View className=" w-[150%]  -ml-4  pt-2">
-                            <MaskedView maskElement={<View className='justify-center items-center  '><Text className='text-2xl font-bold'>TikDown</Text></View>}>
-                                <LinearGradient
-                                     colors={['#EE1D52', '#FFFFFF', '#69C9D0']}
-                                    start={{ x: 0, y: 0.5 }}
-                                    end={{ x: 1, y: 0.5 }}
-                                >
-                                    <Text className='  h-full'>                             </Text>
-                                </LinearGradient>
-                            </MaskedView>
-                        </View>),
-                    // headerTitleStyle:{
-                    //     color:'white',
-                    // },
-                    // headerStyle: {
-                    //     // backgroundColor: 'black',
-                    //     elevation: 0,
-
-
-                    // },
-                    headerTitleAlign: 'center',
-                    swipeEnabled: false,
-                    headerLeft(props) {
-                        return <View className="pl-3"><MaterialIcons name="history" size={24} color="#69C9D0" onPress={() => {
-
-
-                            ADD_TRUE()
-                        }}/></View>
-                    },
-                    headerBackground(props) {
-
-                        return (
-                            <View className="h-full bg-black ">
-                    
-                            </View>)
-                    },
-
-                }} />
-
-
-            </Drawer>
-
-        </>
-    )
-}
-
-export default connect(null, { ADD_TRUE })(_layout)
+const styles = StyleSheet.create({
+  headerBg: {
+    flex: 1,
+    backgroundColor: "black",
+  },
+  titleText: {
+    fontSize: 22,
+    fontWeight: "800",
+    letterSpacing: 1,
+  },
+  hidden: {
+    opacity: 0,
+  },
+  iconBtn: {
+    marginLeft: 12,
+    padding: 6,
+    borderRadius: 10,
+    backgroundColor: "#0f172a",
+  },
+});

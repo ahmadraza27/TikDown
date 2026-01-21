@@ -1,54 +1,66 @@
 // addReducer.tsx
-import * as FileSystem from 'expo-file-system/legacy'; // use legacy API to avoid deprecation
+import * as FileSystem from 'expo-file-system/legacy';
 
 const tikDir = FileSystem.documentDirectory + 'tikDown/';
 
-interface State {
-  add: boolean;
-  docsList: string[];
-}
-
-const initialState: State = {
-  add: false,
-  docsList: [], // start empty, we will fetch asynchronously
+const initialState = {
+    add: false,
+    docsList: [] as string[],
 };
 
-const CreateModalReducer = (state = initialState, action: { type: string; payload?: any }) => {
-  switch (action.type) {
-    case "ADD_TRUE":
-      return { ...state, add: true };
-    case "ADD_FALSE":
-      return { ...state, add: false };
-    case "ADD":
-      return { ...state, docsList: action.payload || [] }; // update docsList with fetched files
-    default:
-      return state;
-  }
+const CreateModalReducer = (
+    state = initialState,
+    action: { type: string; payload?: any }
+) => {
+    switch (action.type) {
+        case "ADD_TRUE":
+            return { ...state, add: true };
+
+        case "ADD_FALSE":
+            return { ...state, add: false };
+
+        case "ADD":
+            return { ...state, docsList: action.payload };
+
+        default:
+            return state;
+    }
 };
 
 export default CreateModalReducer;
 
-// Async action to fetch files
+/* ===========================
+   ASYNC ACTIONS
+   =========================== */
+
+// ✅ Ensure directory exists
+const ensureTikDir = async () => {
+    const dirInfo = await FileSystem.getInfoAsync(tikDir);
+    if (!dirInfo.exists) {
+        await FileSystem.makeDirectoryAsync(tikDir, { intermediates: true });
+    }
+};
+
+// ✅ Load files safely
 export const ADD = () => async (dispatch: any) => {
-  try {
-    const dir = await FileSystem.readDirectoryAsync(tikDir);
-    const files = dir.map(f => tikDir + f); // full file paths
-    dispatch({ type: "ADD", payload: files });
-  } catch (error) {
-    console.error("Error reading directory:", error);
-    dispatch({ type: "ADD", payload: [] });
-  }
+    try {
+        await ensureTikDir(); // <<< IMPORTANT FIX
+
+        const files = await FileSystem.readDirectoryAsync(tikDir);
+        const fullPaths = files.map(f => tikDir + f);
+
+        dispatch({ type: "ADD", payload: fullPaths });
+    } catch (error) {
+        console.error("Error reading directory:", error);
+        dispatch({ type: "ADD", payload: [] });
+    }
 };
 
-export const ADD_TRUE = () => (dispatch: any) => {
-  dispatch({ type: "ADD_TRUE" });
-};
+export const ADD_TRUE = () => (dispatch: any) =>
+    dispatch({ type: "ADD_TRUE" });
 
-export const ADD_FALSE = () => (dispatch: any) => {
-  dispatch({ type: "ADD_FALSE" });
-};
-
-
+export const ADD_FALSE = () => (dispatch: any) =>
+    dispatch({ type: "ADD_FALSE" });
 
 
 
